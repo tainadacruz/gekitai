@@ -16,9 +16,9 @@ class GuessState(State):
 
         self.__title = Text(
             pg.Rect(
-                self.__display.resolution[0] // 2 - 150,
+                0,
                 self.__display.resolution[1] // 2 - 50,
-                400,
+                self.__display.resolution[0],
                 40,
             ),
             "Guesser, é par ou ímpar?",
