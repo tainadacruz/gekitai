@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 class State(ABC):
     @abstractmethod
-    def execute(self):
+    def execute(self) -> "Transition":
         """Lógica de execução do estado"""
 
 

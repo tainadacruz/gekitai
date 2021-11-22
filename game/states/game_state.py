@@ -33,8 +33,9 @@ class HideState(State):
                 self.__display.resolution[1] // 2 - 50,
                 400,
                 40,
-            ), 
-            "Hidder, esconda um número.", (255, 255, 255)
+            ),
+            "Hider, esconda um número.",
+            (255, 255, 255),
         )
 
         self.__text_box = TextBox(
@@ -62,7 +63,6 @@ class HideState(State):
         self.__text_box.draw(self.__surface)
         self.__submit.draw(self.__surface)
         self.__text.draw(self.__surface)
-
 
     def execute(self):
         self.__text_box.update(self.__surface)
@@ -92,8 +92,9 @@ class BetState(State):
                 self.__display.resolution[1] // 2 - 50,
                 400,
                 40,
-            ), 
-            "Guesser, quer apostar quantas bolinhas?", (255, 255, 255)
+            ),
+            "Guesser, quer apostar quantas bolinhas?",
+            (255, 255, 255),
         )
 
         self.__text_box = TextBox(
@@ -117,7 +118,7 @@ class BetState(State):
         self.__draw_ui()
 
     def __draw_ui(self):
-        pg.draw.rect(self.__surface, (0,0,0), self.__surface.get_rect())
+        pg.draw.rect(self.__surface, (0, 0, 0), self.__surface.get_rect())
         self.__text_box.draw(self.__surface)
         self.__submit.draw(self.__surface)
         self.__text.draw(self.__surface)
@@ -150,8 +151,9 @@ class GuessState(State):
                 self.__display.resolution[1] // 2 - 50,
                 400,
                 40,
-            ), 
-            "Guesser, é par ou ímpar?", (255, 255, 255)
+            ),
+            "Guesser, é par ou ímpar?",
+            (255, 255, 255),
         )
 
         self.__submit1 = Button(
@@ -173,19 +175,15 @@ class GuessState(State):
             ),
             "ímpar",
         )
-        
+
         self.__draw_ui()
 
-
     def __draw_ui(self):
-        pg.draw.rect(self.__surface, (0,0,0), self.__surface.get_rect())
+        pg.draw.rect(self.__surface, (0, 0, 0), self.__surface.get_rect())
         self.__text.draw(self.__surface)
         self.__submit1.draw(self.__surface)
         self.__submit2.draw(self.__surface)
 
-
     def execute(self):
         self.__display.draw(self.__surface)
         return Transition(Action.NONE)
-
-    

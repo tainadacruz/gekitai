@@ -13,8 +13,8 @@ class Button:
         self.__text.draw(surface)
 
     def clicked(self) -> bool:
-        return Input().mouse == pg.MOUSEBUTTONUP and self.__rect.collidepoint(
-            Input().mouse_position
+        return Input().mouse.pressed and self.__rect.collidepoint(
+            Input().mouse.position
         )
 
 
@@ -37,7 +37,7 @@ class TextBox:
         text = self.__font.render(self.__text, False, (0, 0, 0))
         surface.blit(text, self.__rect)
 
-    def update(self, surface: pg.Surface) -> bool:
+    def update(self, surface: pg.Surface) -> None:
         text = self.__text
         if "backspace" in Input().just_pressed:
             self.__text = self.__text[:-1]
