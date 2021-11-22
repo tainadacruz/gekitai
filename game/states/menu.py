@@ -14,6 +14,7 @@ class MenuState(State):
         self.__display = Display()
         self.__surface = pg.Surface(self.__display.resolution)
 
+        self.__logo = pg.image.load("./img/logo.png")
         self.__start_button = Button(
             pg.Rect(
                 10,
@@ -36,7 +37,8 @@ class MenuState(State):
         self.__draw_ui()
 
     def __draw_ui(self):
-        pg.draw.rect(self.__surface, (255, 255, 255), self.__surface.get_rect())
+        pg.draw.rect(self.__surface, (0, 0, 0), self.__surface.get_rect())
+        self.__surface.blit(self.__logo, (10, 150))
         self.__start_button.draw(self.__surface)
         self.__exit_button.draw(self.__surface)
 

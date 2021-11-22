@@ -4,12 +4,13 @@ from game.input import Input
 
 
 class Button:
-    def __init__(self, rect: pg.Rect, text=""):
+    def __init__(self, rect: pg.Rect, text: str, color=(244, 71, 134)):
         self.__rect = rect
-        self.__text = Text(rect, text)
+        self.__color = color
+        self.__text = Text(rect, text, (255, 255, 255))
 
     def draw(self, surface: pg.Surface) -> None:
-        pg.draw.rect(surface, (0, 155, 0), self.__rect)
+        pg.draw.rect(surface, self.__color, self.__rect)
         self.__text.draw(surface)
 
     def clicked(self) -> bool:
