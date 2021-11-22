@@ -2,7 +2,9 @@ import pygame as pg
 
 from game.data import GameData
 from game.display import Display
+from game.guess import Even, Odd
 from game.state import State, Transition, TransitionType
+from game.states.reveal import RevealState
 from game.widgets import Button, Text
 
 
@@ -12,7 +14,7 @@ class GuessState(State):
         self.__surface = pg.Surface(self.__display.resolution)
         self.__data = data
 
-        self.__text = Text(
+        self.__title = Text(
             pg.Rect(
                 self.__display.resolution[0] // 2 - 150,
                 self.__display.resolution[1] // 2 - 50,
@@ -23,7 +25,7 @@ class GuessState(State):
             (255, 255, 255),
         )
 
-        self.__submit1 = Button(
+        self.__even_button = Button(
             pg.Rect(
                 self.__display.resolution[0] // 2 - 250,
                 self.__display.resolution[1] // 2 + 50,
@@ -33,7 +35,7 @@ class GuessState(State):
             "Par",
         )
 
-        self.__submit2 = Button(
+        self.__odd_button = Button(
             pg.Rect(
                 self.__display.resolution[0] // 2 + 150,
                 self.__display.resolution[1] // 2 + 50,
@@ -47,10 +49,19 @@ class GuessState(State):
 
     def __draw_ui(self):
         pg.draw.rect(self.__surface, (0, 0, 0), self.__surface.get_rect())
-        self.__text.draw(self.__surface)
-        self.__submit1.draw(self.__surface)
-        self.__submit2.draw(self.__surface)
+        self.__title.draw(self.__surface)
+        self.__even_button.draw(self.__surface)
+        self.__odd_button.draw(self.__surface)
 
     def execute(self):
         self.__display.draw(self.__surface)
+
+        if self.__even_button.clicked():
+            self.__data.round.guess = Even()
+        elif self.__odd_button.clicked():
+            self.__data.round.guess = Odd()
+
+        if self.__data.round.guess is not None:
+            return Transition(TransitionType.SWITCH, RevealState(self.__data))
+
         return Transition(TransitionType.NONE)

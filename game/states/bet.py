@@ -61,6 +61,8 @@ class BetState(State):
                     return Transition(
                         TransitionType.SWITCH, GuessState(self.__data)
                     )
+                else:
+                    self.__text_box.clear(self.__surface)
             except ValueError:
                 self.__text_box.clear(self.__surface)
 

@@ -1,6 +1,8 @@
 import pygame as pg
+from game.data import GameData
 
 from game.display import Display
+from game.player import Player
 from game.state import State, Transition, TransitionType
 from game.states.hide import HideState
 from game.utils import end
@@ -41,7 +43,12 @@ class MenuState(State):
     def execute(self) -> Transition:
         self.__display.draw(self.__surface)
         if self.__start_button.clicked():
-            return Transition(TransitionType.PUSH, HideState())
+            return Transition(
+                TransitionType.PUSH,
+                HideState(
+                    GameData(Player("Player A"), Player("Player B"))
+                ),  # Isso deve ser mudado no futuro
+            )
         elif self.__exit_button.clicked():
             end()
         return Transition(TransitionType.NONE)
