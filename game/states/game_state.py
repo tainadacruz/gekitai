@@ -138,9 +138,8 @@ class BetState(State):
         return Transition(Action.NONE)
 
 
-
 class GuessState(State):
-    def __init__(self, data: RoundData) -> None:
+    def __init__(self, data: GameData) -> None:
         self.__display = Display()
         self.__surface = pg.Surface(self.__display.resolution)
         self.__data = data
@@ -186,17 +185,6 @@ class GuessState(State):
 
 
     def execute(self):
-        self.__text_box.update(self.__surface)
-
-        if self.__submit1.clicked():
-            try:
-                amount = int(self.__text_box.text)
-                if self.__data.guesser.can_bet(amount):
-                    self.__data.round.bet = amount
-                    return Transition(Action.SWITCH, GuessState(self.__data))
-            except ValueError:
-                self.__text_box.clear(self.__surface)
-
         self.__display.draw(self.__surface)
         return Transition(Action.NONE)
 
