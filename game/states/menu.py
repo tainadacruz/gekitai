@@ -1,9 +1,8 @@
 import pygame as pg
 
 from game.display import Display
-from game.input import Input
-from game.states.game_state import GameState
-from game.states.state import Action, State, Transition
+from game.state import State, Transition, TransitionType
+from game.states.hide import HideState
 from game.utils import end
 from game.widgets import Button
 
@@ -19,7 +18,8 @@ class MenuState(State):
                 self.__display.resolution[1] // 2,
                 self.__display.resolution[0] // 2,
                 80,
-            ), "START"
+            ),
+            "START",
         )
         self.__exit_button = Button(
             pg.Rect(
@@ -27,9 +27,10 @@ class MenuState(State):
                 self.__display.resolution[1] // 2 + 90,
                 self.__display.resolution[0] // 2,
                 80,
-            ), "QUIT"
+            ),
+            "QUIT",
         )
-        
+
         self.__draw_ui()
 
     def __draw_ui(self):
@@ -40,7 +41,7 @@ class MenuState(State):
     def execute(self) -> Transition:
         self.__display.draw(self.__surface)
         if self.__start_button.clicked():
-            return Transition(Action.PUSH, GameState())
+            return Transition(TransitionType.PUSH, HideState())
         elif self.__exit_button.clicked():
             end()
-        return Transition(Action.NONE)
+        return Transition(TransitionType.NONE)
