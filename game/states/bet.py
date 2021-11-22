@@ -23,6 +23,16 @@ class BetState(State):
             "Guesser, quer apostar quantas bolinhas?",
             (255, 255, 255),
         )
+        self.__error = Text(
+            pg.Rect(
+                self.__display.resolution[0] // 2 - 200,
+                self.__display.resolution[1] // 2 + 100,
+                400,
+                40,
+            ),
+            "",
+            (244, 71, 134),
+        )
 
         self.__text_box = TextBox(
             pg.Rect(
@@ -49,6 +59,7 @@ class BetState(State):
         self.__text_box.draw(self.__surface)
         self.__submit.draw(self.__surface)
         self.__text.draw(self.__surface)
+        self.__error.draw(self.__surface)
 
     def execute(self):
         self.__text_box.update(self.__surface)
@@ -63,8 +74,11 @@ class BetState(State):
                     )
                 else:
                     self.__text_box.clear(self.__surface)
+                    self.__error.text = "Escolha um valor válido"
+                    self.__draw_ui()
             except ValueError:
                 self.__text_box.clear(self.__surface)
-
+                self.__error.text = "Escolha um valor válido"
+                self.__draw_ui()
         self.__display.draw(self.__surface)
         return Transition(TransitionType.NONE)
