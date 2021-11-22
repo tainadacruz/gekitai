@@ -13,7 +13,7 @@ class RoundData:
         self.bet = None
         self.guess = None
 
-    def execute(self, hider: Player, guesser: Player):
+    def execute(self, hider: Player, guesser: Player) -> bool:
         if self.hidden == None or self.bet == None or self.guess == None:
             raise AttributeError()
         guess_correct = self.guess.execute(self.hidden)
@@ -21,6 +21,7 @@ class RoundData:
             guesser.win(self.bet)
         else:
             hider.win(self.bet)
+        return guess_correct
 
 
 class GameData:
@@ -40,6 +41,9 @@ class GameData:
     @property
     def round(self) -> RoundData:
         return self.__round
+
+    def execute(self) -> bool:
+        return self.__round.execute(self.__hider, self.__guesser)
 
     def switch(self) -> None:
         self.__hider, self.__guesser = self.__guesser, self.__hider
