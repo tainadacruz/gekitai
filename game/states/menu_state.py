@@ -19,7 +19,7 @@ class MenuState(State):
                 self.__display.resolution[1] // 2,
                 self.__display.resolution[0] // 2,
                 80,
-            )
+            ), "START"
         )
         self.__exit_button = Button(
             pg.Rect(
@@ -27,8 +27,9 @@ class MenuState(State):
                 self.__display.resolution[1] // 2 + 90,
                 self.__display.resolution[0] // 2,
                 80,
-            )
+            ), "QUIT"
         )
+        
         self.__draw_ui()
 
     def __draw_ui(self):

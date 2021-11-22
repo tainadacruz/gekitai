@@ -17,6 +17,7 @@ class Player:
     def guess(self) -> Guess:
         """Fazer lógica, retornar Even ou Odd"""
 
+
     def can_bet(self, n: int) -> bool:
         return 0 < n <= self.__marbles
 
