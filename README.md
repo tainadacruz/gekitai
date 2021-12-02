@@ -1,4 +1,4 @@
-# marbles
+# gekitai
 
 Para rodar, use:
 
