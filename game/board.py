@@ -38,7 +38,7 @@ class Board:
         """Aguarda um click no tabuleiro"""
         if pg.event.peek(eventtype=pg.MOUSEBUTTONDOWN):
             i, j = pg.mouse.get_pos()
-            position = (i // 100, (j - 200) // 100)
+            position = ((i - 200) // 100, j // 100)
             if self.position_valid(position) and self.position_empty(position):
                 return position
 

@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 
 FRAMERATE = 30.0
-RESOLUTION = (600, 800)
+RESOLUTION = (1000, 600)
 DIRECTIONS = [
     (0, -1),
     (1, -1),

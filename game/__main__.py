@@ -31,7 +31,7 @@ def main():
                 sys.exit()
 
         window.fill((255, 255, 255))
-        window.blit(board.surface, (0, 200))
+        window.blit(board.surface, (200, 0))
         pg.display.update()
 
 
