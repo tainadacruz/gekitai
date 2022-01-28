@@ -9,19 +9,15 @@ class Player:
         self.__color = color
 
     @property
-    def piece_count(self) -> int:
-        return len(self.__pieces)
-
-    @property
     def color(self) -> Color:
         return self.__color
 
     def place_piece(self) -> Piece:
-        if self.piece_count > 0:
+        if len(self.__pieces) > 0:
             return self.__pieces.pop()
         else:
             # Jogo já devia ter sido encerrado
             raise NoPiecesException()
 
-    def retrieve_piece(self, piece: Piece):
+    def take_piece(self, piece: Piece):
         self.__pieces.append(piece)
