@@ -5,9 +5,9 @@ from game.constants import Color
 
 
 class Interface:
-    def __init__(self, screen: pg.Surface, board: Board):
+    def __init__(self, screen: pg.Surface):
         self.__screen = screen
-        self.__board = board
+        self.__board = Board()
         self.draw()
 
     def draw(self):
@@ -17,6 +17,8 @@ class Interface:
         blue_piece = pg.image.load("assets/blue_piece.png")
         logo = pg.image.load("assets/logo.png")
         font = pg.font.Font(None, 64)
+        start = pg.image.load("assets/start.png")
+        exit = pg.image.load("assets/exit.png")
 
         self.__screen.blit(logo, (0, 0))
         self.__screen.blit(red_piece, (0, 384 + 50))
@@ -27,6 +29,9 @@ class Interface:
         self.__screen.blit(
             font.render("8", False, (0, 0, 0)), (384 - 128 + 20, 384 + 50 + 12)
         )
+
+        self.__screen.blit(start, (32, 384 + 50 + 128))
+        self.__screen.blit(exit, (32 + 128 + 64, 384 + 50 + 128))
 
         for x in range(6):
             for y in range(6):

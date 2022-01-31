@@ -14,8 +14,7 @@ def main():
         RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32
     )
 
-    board = Board([Player(Color.RED), Player(Color.BLUE)])
-    interface = Interface(screen, board)
+    interface = Interface(screen)
 
     while True:
         clock.tick(FRAMERATE)

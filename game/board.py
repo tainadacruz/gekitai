@@ -1,4 +1,4 @@
-from game.constants import DIRECTIONS
+from game.constants import DIRECTIONS, Color
 from game.exceptions import InvalidPositionException
 
 from game.piece import Piece
@@ -6,9 +6,9 @@ from game.player import Player
 
 
 class Board:
-    def __init__(self, players: list[Player]):
+    def __init__(self):
         self.__cells: list[list[Piece]] = [[None] * 6 for _ in range(6)]
-        self.__players = players
+        self.__players = [Player(Color.RED), Player(Color.BLUE)]
 
     @property
     def current_player(self) -> Player:
