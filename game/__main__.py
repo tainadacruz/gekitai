@@ -7,6 +7,7 @@ from game.player import Player
 
 
 def main():
+    pg.init()
     clock = pg.time.Clock()
     screen = pg.display.set_mode(
         RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32
