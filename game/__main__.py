@@ -3,6 +3,7 @@ import sys
 
 from game.board import Board
 from game.constants import FRAMERATE, RESOLUTION, Color
+from game.interface import Interface
 from game.player import Player
 
 
@@ -13,12 +14,13 @@ def main():
         RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32
     )
 
-    board = Board(screen, [Player(Color.RED), Player(Color.BLUE)])
+    board = Board([Player(Color.RED), Player(Color.BLUE)])
+    interface = Interface(screen, board)
 
     while True:
         clock.tick(FRAMERATE)
 
-        board.loop()
+        interface.loop()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
