@@ -1,58 +1,113 @@
-from game.constants import DIRECTIONS, Color
-from game.exceptions import InvalidPositionException
+from game.constants import DIRECTIONS, Color, Status
+from game.exceptions import EmptyCellException, InvalidPositionException, OccupiedCellException
 
 from game.piece import Piece
 from game.player import Player
 
 
+class Cell:
+    def __init__(self):
+        self.__piece = None
+
+    def place_piece(self, piece: Piece) -> None:
+        if self.__piece is not None:
+            raise OccupiedCellException()
+        self.__piece = piece
+
+    def remove_piece(self) -> Piece:
+        if self.__piece is None:
+            raise EmptyCellException()
+        piece = self.__piece
+        self.__piece = None
+        return piece
+
+    def is_occupied(self) -> bool:
+        return self.__piece is not None
+
+    def is_empty(self) -> bool:
+        return self.__piece is None
+
+    def get_piece(self) -> Piece:
+        return self.__piece
+
+
 class Board:
     def __init__(self):
-        self.__cells: list[list[Piece]] = [[None] * 6 for _ in range(6)]
-        self.__players = [Player(Color.RED), Player(Color.BLUE)]
+        self.__cells: list[list[Cell]]
+        self.__players: list[Player]
+        self.__status = Status.NO_MATCH
+        self.start()
 
-    @property
+    def click(self, position: tuple[int, int]) -> None:
+        if self.__status == Status.NO_MATCH:
+            self.start()
+        elif self.__status == Status.IN_PROGRESS:
+            self.place_piece(position)
+        elif self.__status == Status.FINISHED:
+            self.start()
+
+    def start(self) -> None:
+        self.__cells = [[Cell() for _ in range(6)] for _ in range(6)]
+        self.__players = [Player(Color.RED), Player(Color.BLUE)]
+        self.__status = Status.IN_PROGRESS
+
     def current_player(self) -> Player:
         return self.__players[0]
 
     def flip_players(self) -> None:
         self.__players.reverse()
 
-    def at(self, position: tuple[int, int]) -> Piece:
+    def get_player(self, color: Color) -> Player:
+        for player in self.__players:
+            if player.get_color() == color:
+                return player
+
+    def get_cell(self, position: tuple[int, int]) -> Cell:
         if self.position_valid(position):
-            i, j = position
-            return self.__cells[i][j]
-        return None
+            return self.__cells[position[0]][position[1]]
+        raise InvalidPositionException()
 
     def position_valid(self, position: tuple[int, int]) -> bool:
         return 0 <= position[0] < 6 and 0 <= position[1] < 6
 
-    def position_empty(self, position: tuple[int, int]) -> bool:
-        i, j = position
-        return self.__cells[i][j] == None
+    def move_piece(self, source: Cell, destination: Cell) -> None:
+        if destination.is_empty():
+            piece = source.remove_piece()
+            destination.place_piece(piece)
 
-    def place_piece(self, position: tuple[int, int], piece: Piece):
-        if not self.position_valid(position):
-            raise InvalidPositionException()
+    def remove_piece(self, cell: Cell) -> None:
+        piece = cell.remove_piece()
+        owner = next(p for p in self.__players if p.get_color() == piece.get_color())
+        owner.take_piece(piece)
 
-        i, j = position
-        self.__cells[i][j] = piece
+    def place_piece(self, position: tuple[int, int]) -> None:
+        if self.position_valid(position):
+            cell = self.get_cell(position)
+            if cell.is_occupied():
+                return
+        else:
+            return
 
-        removed_pieces: list[Piece] = []
+        player = self.current_player()
+        piece = player.place_piece()
+        cell.place_piece(piece)
 
+        self.push_neighbors(position)
+        self.flip_players()
+
+    def push_neighbors(self, position: tuple[int, int]) -> None:
         for direction in DIRECTIONS:
-            i = position[0] + direction[0]
-            j = position[1] + direction[1]
-            if self.position_valid((i, j)) and not self.position_empty((i, j)):
-                push = (i + direction[0], j + direction[1])
-                if not self.position_valid(push):
-                    removed_pieces.append(self.__cells[i][j])
-                    self.__cells[i][j] = None
-                elif self.position_empty(push):
-                    self.__cells[push[0]][push[1]] = self.__cells[i][j]
-                    self.__cells[i][j] = None
+            neighbor_position = (position[0] + direction[0], position[1] + direction[1])
+            if self.position_valid(neighbor_position):
+                neighbor = self.get_cell(neighbor_position)
+                if neighbor.is_empty():
+                    continue
+            else:
+                continue
 
-        for removed in removed_pieces:
-            owner: Player = next(
-                p for p in self.__players if p.color == removed.color
-            )
-            owner.take_piece(removed)
+            push_position = (neighbor_position[0] + direction[0], neighbor_position[1] + direction[1])
+            if self.position_valid(push_position):
+                push = self.get_cell(push_position)
+                self.move_piece(neighbor, push)
+            else:
+                self.remove_piece(neighbor)

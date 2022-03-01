@@ -18,3 +18,9 @@ DIRECTIONS = [
 class Color(Enum):
     RED = auto()
     BLUE = auto()
+
+
+class Status(Enum):
+    NO_MATCH = auto()
+    IN_PROGRESS = auto()
+    FINISHED = auto()

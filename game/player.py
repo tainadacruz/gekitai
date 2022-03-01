@@ -8,16 +8,20 @@ class Player:
         self.__pieces = [Piece(color) for _ in range(8)]
         self.__color = color
 
-    @property
-    def color(self) -> Color:
+    def get_color(self) -> Color:
         return self.__color
 
     def place_piece(self) -> Piece:
-        if len(self.__pieces) > 0:
+        if self.has_pieces():
             return self.__pieces.pop()
         else:
-            # Jogo já devia ter sido encerrado
             raise NoPiecesException()
 
     def take_piece(self, piece: Piece):
         self.__pieces.append(piece)
+
+    def has_pieces(self) -> bool:
+        return len(self.__pieces) >= 0
+
+    def get_piece_count(self) -> int:
+        return len(self.__pieces)
