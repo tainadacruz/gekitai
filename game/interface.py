@@ -1,14 +1,28 @@
-import pygame as pg
-from game.board import Board
+import sys
 
-from game.constants import Color
+import pygame as pg
+
+from game.board import Board
+from game.constants import FRAMERATE, RESOLUTION, Color
 
 
 class Interface:
-    def __init__(self, screen: pg.Surface):
-        self.__screen = screen
+    def __init__(self):
+        pg.init()
+        self.__screen = pg.display.set_mode(RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32)
         self.__board = Board()
         self.draw()
+
+    def run(self) -> None:
+        clock = pg.time.Clock()
+        while True:
+            clock.tick(FRAMERATE)
+            self.loop()
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+            pg.display.update()
 
     def draw(self):
         self.__screen.fill((255, 255, 255))

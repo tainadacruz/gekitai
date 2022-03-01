@@ -21,7 +21,7 @@ class Player:
         self.__pieces.append(piece)
 
     def has_pieces(self) -> bool:
-        return len(self.__pieces) >= 0
+        return len(self.__pieces) > 0
 
     def get_piece_count(self) -> int:
         return len(self.__pieces)
