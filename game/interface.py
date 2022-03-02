@@ -12,6 +12,7 @@ class Interface:
         self.__screen = pg.display.set_mode(RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32)
         self.__board = Board()
         self.draw()
+        self.run()
 
     def run(self) -> None:
         clock = pg.time.Clock()
@@ -50,7 +51,7 @@ class Interface:
             for y in range(6):
                 self.__screen.blit(cell_image, (x * 64, y * 64 + 50))
                 cell = self.__board.get_cell((x, y))
-                if not cell.is_empty():
+                if cell.is_occupied():
                     piece = cell.get_piece()
                     self.__screen.blit(
                         red_piece if piece.get_color() == Color.RED else blue_piece,
