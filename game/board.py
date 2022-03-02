@@ -37,9 +37,11 @@ class Board:
         self.__players: list[Player]
         self.__status: Status
         self.__current_player: Player
-        self.__winner: Player
 
         self.initialize()
+
+    def get_status(self) -> Status:
+        return self.__status
 
     def click(self, position: tuple[int, int]) -> None:
         if self.__status == Status.NO_MATCH:
