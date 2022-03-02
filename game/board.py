@@ -88,7 +88,7 @@ class Board:
 
     def remove_piece(self, cell: Cell) -> None:
         piece = cell.remove_piece()
-        owner = next(p for p in self.__players if p.get_color() == piece.get_color())
+        owner = self.get_player(piece.get_color())
         owner.take_piece(piece)
 
     def check_win(self) -> bool:
