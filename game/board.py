@@ -99,10 +99,6 @@ class Board:
         owner = self.get_player(piece.get_color())
         owner.take_piece(piece)
 
-    def set_winner(self, player: Player) -> None:
-        self.__status = Status.FINISHED
-        player.set_win()
-
     def check_win(self) -> bool:
         """Implementação do check para vitória"""
         return False
