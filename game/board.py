@@ -36,7 +36,7 @@ class Board:
         self.__cells: list[list[Cell]]
         self.__players: list[Player]
         self.__status = Status.NO_MATCH
-        self.start()
+        self.initialize()
 
     def click(self, position: tuple[int, int]) -> None:
         if self.__status == Status.NO_MATCH:
@@ -46,7 +46,7 @@ class Board:
         elif self.__status == Status.FINISHED:
             self.start()
 
-    def start(self) -> None:
+    def initialize(self) -> None:
         self.__cells = [[Cell() for _ in range(6)] for _ in range(6)]
         self.__players = [Player(Color.RED), Player(Color.BLUE)]
         self.__status = Status.IN_PROGRESS
@@ -80,6 +80,20 @@ class Board:
         owner = next(p for p in self.__players if p.get_color() == piece.get_color())
         owner.take_piece(piece)
 
+    def check_win(self) -> bool:
+        """Implementação do check para vitória"""
+        return False
+
+    def finish_match(self) -> None:
+        """Alterna para o estado de vitória"""
+        self.__status = Status.FINISHED
+
+    def end_turn(self) -> None:
+        if self.check_win():
+            self.finish_match()
+        else:
+            self.flip_players()
+
     def place_piece(self, position: tuple[int, int]) -> None:
         if self.position_valid(position):
             cell = self.get_cell(position)
@@ -93,7 +107,7 @@ class Board:
         cell.place_piece(piece)
 
         self.push_neighbors(position)
-        self.flip_players()
+        self.end_turn()
 
     def push_neighbors(self, position: tuple[int, int]) -> None:
         for direction in DIRECTIONS:
