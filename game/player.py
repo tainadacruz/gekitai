@@ -7,6 +7,7 @@ class Player:
     def __init__(self, color: Color):
         self.__pieces = [Piece(color) for _ in range(8)]
         self.__color = color
+        self.__won = False
 
     def get_color(self) -> Color:
         return self.__color
@@ -25,3 +26,9 @@ class Player:
 
     def get_piece_count(self) -> int:
         return len(self.__pieces)
+
+    def set_win(self) -> None:
+        self.__won = True
+
+    def has_won(self) -> bool:
+        return self.__won

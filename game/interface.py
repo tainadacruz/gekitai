@@ -11,18 +11,14 @@ class Interface:
         pg.init()
         self.__screen = pg.display.set_mode(RESOLUTION, pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED, 32)
         self.__board = Board()
+        self.__clock = pg.time.Clock()
         self.draw()
         self.run()
 
     def run(self) -> None:
-        clock = pg.time.Clock()
         while True:
-            clock.tick(FRAMERATE)
+            self.__clock.tick(FRAMERATE)
             self.loop()
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
             pg.display.update()
 
     def draw(self):
@@ -65,7 +61,12 @@ class Interface:
 
     def get_input(self) -> tuple[int, int]:
         """Aguarda um click na tela"""
-        if pg.event.peek(eventtype=pg.MOUSEBUTTONDOWN):
-            i, j = pg.mouse.get_pos()
-            position = (i // 64, (j - 50) // 64)
-            return position
+        for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN:
+                i, j = pg.mouse.get_pos()
+                position = (i // 64, (j - 50) // 64)
+                return position
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            
