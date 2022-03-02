@@ -100,8 +100,34 @@ class Board:
         owner.take_piece(piece)
 
     def check_win(self) -> bool:
-        """Implementação do check para vitória"""
-        return False
+        for player in self.__players:
+            if not player.has_pieces():
+                player.set_win()
+        for x in range(6):
+            for y in range(6):
+                cell = self.get_cell((x, y))
+                if cell.is_empty():
+                    continue
+                color = cell.get_piece().get_color()
+                for (i, j) in [(1,1), (0,1), (1,0), (1,-1)]:
+                    position = (x+i, y+j)
+                    if not self.position_valid(position):
+                        continue
+                    cell = self.get_cell(position)
+                    if cell.is_empty():
+                        continue
+                    if color != cell.get_piece().get_color():
+                        continue
+                    position = (x-i, y-j)
+                    if not self.position_valid(position):
+                        continue
+                    cell = self.get_cell(position)
+                    if cell.is_empty():
+                        continue
+                    if color != cell.get_piece().get_color():
+                        continue
+                    self.get_player(color).set_win()
+        return any(p.has_won() for p in self.__players)
 
     def finish_match(self) -> None:
         """Alterna para o estado de vitória"""
