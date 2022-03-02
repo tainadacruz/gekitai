@@ -35,27 +35,38 @@ class Board:
     def __init__(self):
         self.__cells: list[list[Cell]]
         self.__players: list[Player]
-        self.__status = Status.NO_MATCH
+        self.__status: Status
+        self.__current_player: Player
+        self.__winner: Player
+
         self.initialize()
 
     def click(self, position: tuple[int, int]) -> None:
         if self.__status == Status.NO_MATCH:
-            self.start()
+            self.initialize()
         elif self.__status == Status.IN_PROGRESS:
             self.place_piece(position)
         elif self.__status == Status.FINISHED:
-            self.start()
+            self.initialize()
 
     def initialize(self) -> None:
         self.__cells = [[Cell() for _ in range(6)] for _ in range(6)]
         self.__players = [Player(Color.RED), Player(Color.BLUE)]
         self.__status = Status.IN_PROGRESS
+        self.__current_player = self.__players[0]
+        self.__winner = None
+
+    def get_winner(self) -> Player:
+        return self.__winner
 
     def current_player(self) -> Player:
-        return self.__players[0]
+        return self.__current_player
 
     def flip_players(self) -> None:
-        self.__players.reverse()
+        for player in self.__players:
+            if player.get_color() != self.__current_player.get_color():
+                self.__current_player = player
+                return
 
     def get_player(self, color: Color) -> Player:
         for player in self.__players:
