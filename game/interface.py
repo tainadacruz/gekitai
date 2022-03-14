@@ -60,13 +60,12 @@ class Interface:
                 else:
                     vencedor = "Vermelho"
                 self.__screen.blit(
-                    font_smaller.render(f"Vencedor: Jogador {vencedor}!!!", False, (0, 0, 0)), (384 - 350, 384 + 50 + 12 + 70)
+                    font_smaller.render(f"Vencedor: {vencedor}", False, (0, 0, 0)), (384 - 290, 384 + 50 + 12 + 70)
                 )
             else:
                 self.__screen.blit(
-                    font_smaller.render("Empate!", False, (0, 0, 0)), (384 - 208, 384 + 50 + 12 + 70)
+                    font_smaller.render("Empate!", False, (0, 0, 0)), (384 - 238, 384 + 50 + 12 + 70)
                 )
-                print(self.__board.get_status())
 
 
         for x in range(6):
@@ -82,11 +81,8 @@ class Interface:
 
     def loop(self):
         if (position := self.get_input()) != None:
-            print(f"posição:{position}")
             if (position[0] == 1 or 0) and position[1] == 8:
                 self.exit()
-            #elif (position[0] == 4 or 5) and position[1] == 8:
-                #self.__board.finish_match()
             self.__board.click(position)
             self.draw()
 

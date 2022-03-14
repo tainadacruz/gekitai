@@ -48,7 +48,7 @@ class Board:
             self.initialize()
         elif self.__status == Status.IN_PROGRESS:
             self.place_piece(position)
-        elif self.__status == Status.FINISHED and (position[0] == 4 or 5) and position[1] == 8:
+        elif self.__status == Status.FINISHED and ((position[0] == 4 or 5) and position[1] == 8):
             self.initialize()
 
     def initialize(self) -> None:
@@ -56,31 +56,6 @@ class Board:
         self.__players = [Player(Color.RED), Player(Color.BLUE)]
         self.__status = Status.IN_PROGRESS
         self.__current_player = self.__players[0]
-
-        cell = self.get_cell((1, 2))
-        piece = self.__players[0].place_piece()
-        cell.place_piece(piece)
-
-        cell = self.get_cell((1, 4))
-        piece = self.__players[0].place_piece()
-        cell.place_piece(piece)
-
-        cell = self.get_cell((2, 3))
-        piece = self.__players[0].place_piece()
-        cell.place_piece(piece)
-
-        cell = self.get_cell((4, 3))
-        piece = self.__players[1].place_piece()
-        cell.place_piece(piece)
-
-        cell = self.get_cell((5, 4))
-        piece = self.__players[1].place_piece()
-        cell.place_piece(piece)
-
-        cell = self.get_cell((5, 5))
-        piece = self.__players[1].place_piece()
-        cell.place_piece(piece)
-
 
     def get_winner(self) -> list[Player]:
         winners = []
