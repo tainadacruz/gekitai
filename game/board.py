@@ -1,5 +1,4 @@
 from game.constants import DIRECTIONS, Color, Status
-from game.exceptions import EmptyCellException, InvalidPositionException, OccupiedCellException
 
 from game.piece import Piece
 from game.player import Player
@@ -10,13 +9,9 @@ class Cell:
         self.__piece = None
 
     def place_piece(self, piece: Piece) -> None:
-        if self.__piece is not None:
-            raise OccupiedCellException()
         self.__piece = piece
 
     def remove_piece(self) -> Piece:
-        if self.__piece is None:
-            raise EmptyCellException()
         piece = self.__piece
         self.__piece = None
         return piece
@@ -37,37 +32,30 @@ class Board:
         self.__players: list[Player]
         self.__status: Status
         self.__current_player: Player
+        self.__winner: Player
 
         self.initialize()
 
     def get_status(self) -> Status:
         return self.__status
 
+    def get_winner(self) -> Player:
+        return self.__winner
+
     def click(self, position: tuple[int, int]) -> None:
         if self.__status == Status.NO_MATCH:
-            self.initialize()
+            self.__status = Status.IN_PROGRESS
         elif self.__status == Status.IN_PROGRESS:
             self.place_piece(position)
-        elif self.__status == Status.FINISHED and ((position[0] == 4 or 5) and position[1] == 8):
+        elif self.__status == Status.FINISHED:
             self.initialize()
 
     def initialize(self) -> None:
         self.__cells = [[Cell() for _ in range(6)] for _ in range(6)]
         self.__players = [Player(Color.RED), Player(Color.BLUE)]
-        self.__status = Status.IN_PROGRESS
+        self.__status = Status.NO_MATCH
         self.__current_player = self.__players[0]
-
-    def get_winner(self) -> list[Player]:
-        winners = []
-        for player in self.__players:
-            if player.has_won():
-                winners.append(player)
-        if len(winners) == 0:
-            return False
-        return winners
-
-    def set_winner(self, player: Player) -> None:
-        self.__winner = player
+        self.__winner = None
 
     def current_player(self) -> Player:
         return self.__current_player
@@ -86,7 +74,7 @@ class Board:
     def get_cell(self, position: tuple[int, int]) -> Cell:
         if self.position_valid(position):
             return self.__cells[position[0]][position[1]]
-        raise InvalidPositionException()
+        return None
 
     def position_valid(self, position: tuple[int, int]) -> bool:
         return 0 <= position[0] < 6 and 0 <= position[1] < 6
@@ -101,42 +89,67 @@ class Board:
         owner = self.get_player(piece.get_color())
         owner.take_piece(piece)
 
-    def check_win(self) -> bool:
+    def check_alignment(self, position: tuple[int, int]) -> bool:
+        x, y = position
+
+        cell = self.get_cell((x, y))
+        if cell.is_empty():
+            return False
+        color = cell.get_piece().get_color()
+
+        for (i, j) in [(1,1), (0,1), (1,0), (1,-1)]:
+            neighbor = (x+i, y+j)
+            if not self.position_valid(neighbor):
+                continue
+            cell = self.get_cell(neighbor)
+            if cell.is_empty():
+                continue
+            if color != cell.get_piece().get_color():
+                continue
+
+            neighbor = (x-i, y-j)
+            if not self.position_valid(neighbor):
+                continue
+            cell = self.get_cell(neighbor)
+            if cell.is_empty():
+                continue
+            if color != cell.get_piece().get_color():
+                continue
+
+            return True
+        return False
+
+    def check_match_end(self) -> bool:
+        match_end = False
+
         for player in self.__players:
             if not player.has_pieces():
                 player.set_win()
+                match_end = True
+
         for x in range(6):
             for y in range(6):
-                cell = self.get_cell((x, y))
-                if cell.is_empty():
-                    continue
-                color = cell.get_piece().get_color()
-                for (i, j) in [(1,1), (0,1), (1,0), (1,-1)]:
-                    position = (x+i, y+j)
-                    if not self.position_valid(position):
-                        continue
-                    cell = self.get_cell(position)
-                    if cell.is_empty():
-                        continue
-                    if color != cell.get_piece().get_color():
-                        continue
-                    position = (x-i, y-j)
-                    if not self.position_valid(position):
-                        continue
-                    cell = self.get_cell(position)
-                    if cell.is_empty():
-                        continue
-                    if color != cell.get_piece().get_color():
-                        continue
-                    self.get_player(color).set_win()
-        return any(p.has_won() for p in self.__players)
+                if self.check_alignment((x, y)):
+                    color = self.get_cell((x, y)).get_piece().get_color()
+                    player = self.get_player(color)
+                    player.set_win()
+                    match_end = True
+
+        return match_end
 
     def finish_match(self) -> None:
         """Alterna para o estado de vitória"""
         self.__status = Status.FINISHED
 
+        # Precisa ser um "ou exclusivo"
+        player1, player2 = self.__players
+        if player1.has_won() == player2.has_won():
+            self.__winner = None
+        else:
+            self.__winner = player1 if player1.has_won() else player2
+
     def end_turn(self) -> None:
-        if self.check_win():
+        if self.check_match_end():
             self.finish_match()
         else:
             self.flip_players()

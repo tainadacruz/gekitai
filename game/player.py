@@ -1,5 +1,4 @@
 from game.constants import Color
-from game.exceptions import NoPiecesException
 from game.piece import Piece
 
 
@@ -8,6 +7,9 @@ class Player:
         self.__pieces = [Piece(color) for _ in range(8)]
         self.__color = color
         self.__won = False
+    
+    def __str__(self) -> str:
+        return "Azul" if self.__color == Color.BLUE else "Vermelho"
 
     def get_color(self) -> Color:
         return self.__color
@@ -15,8 +17,7 @@ class Player:
     def place_piece(self) -> Piece:
         if self.has_pieces():
             return self.__pieces.pop()
-        else:
-            raise NoPiecesException()
+        return None
 
     def take_piece(self, piece: Piece):
         self.__pieces.append(piece)
