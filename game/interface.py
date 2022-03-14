@@ -72,8 +72,6 @@ class Interface:
 
     def loop(self):
         if (position := self.get_input()) != None:
-            if (position[0] == 1 or 0) and position[1] == 8:
-                self.exit()
             self.__board.click(position)
             self.draw()
 
@@ -87,8 +85,3 @@ class Interface:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-
-    def exit(self):
-        pg.quit()
-        sys.exit()
-            
